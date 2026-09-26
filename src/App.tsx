@@ -1,6 +1,37 @@
+import { useEffect, useState } from 'react'
+import { loadFlights } from './data/loadFlights'
+import type { Flight } from './types'
 import './App.css'
 
+type Status = 'loading' | 'ready' | 'error'
+
+const numberFormat = new Intl.NumberFormat('fr-BE')
+
 function App() {
+  const [flights, setFlights] = useState<Flight[]>([])
+  const [status, setStatus] = useState<Status>('loading')
+
+  useEffect(() => {
+    let cancelled = false
+    const start = performance.now()
+
+    loadFlights()
+      .then((data) => {
+        if (cancelled) return
+        console.log(`${data.length} vols chargés en ${Math.round(performance.now() - start)} ms`)
+        setFlights(data)
+        setStatus('ready')
+      })
+      .catch((error) => {
+        if (cancelled) return
+        console.error(error)
+        setStatus('error')
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
   return (
     <main>
       <div className="dashboard">
@@ -18,6 +49,9 @@ function App() {
         </article>
         <article className="block kpi">
           <h2>Nombre de vols</h2>
+          {status === 'loading' && <p>Chargement…</p>}
+          {status === 'error' && <p>Impossible de charger les données.</p>}
+          {status === 'ready' && <p>{numberFormat.format(flights.length)}</p>}
         </article>
         <article className="block kpi">
           <h2>Prix moyen</h2>

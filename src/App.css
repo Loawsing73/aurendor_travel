@@ -1,6 +1,6 @@
 .dashboard {
   display: grid;
-  grid-template-colums: repeat(12, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   gap: 24px;
   max-width: 1440px;
   margin: 0 auto;
