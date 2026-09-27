@@ -1,16 +1,25 @@
 import { useEffect, useMemo, useState } from 'react'
 import { loadFlights } from './data/loadFlights'
-import { computeKpis, computeMonthly, routeKey, sumBy } from './logic/aggregations'
+import {
+  computeByFlightType,
+  computeKpis,
+  computeMonthly,
+  computeSavings,
+  economicReferencePrices,
+  routeKey,
+  sumBy,
+} from './logic/aggregations'
 import { DEFAULT_FILTERS, filterFlights } from './logic/filters'
 import FiltersBar from './components/FiltersBar'
 import KpiCard from './components/KpiCard'
 import MonthlyTrend from './components/MonthlyTrend'
-import BarBreakdown from './components/BarBreakdown'
+import FlightTypeTable from './components/FlightTypeTable'
+import AgencyBreakdown from './components/AgencyBreakdown'
+import SavingsCard from './components/SavingsCard'
 import TopRoutes from './components/TopRoutes'
-import { FLIGHT_TYPE_LABELS } from './labels'
+import FlightsTable from './components/FlightsTable'
 import { cityName, compactFormat, integerFormat } from './format'
 import type { Filters, Flight } from './types'
-import FlightsTable from './components/FlightsTable'
 import './App.css'
 
 type Status = 'loading' | 'ready' | 'error'
@@ -56,8 +65,9 @@ function App() {
 
   const kpis = useMemo(() => computeKpis(filteredFlights), [filteredFlights])
   const monthly = useMemo(() => computeMonthly(filteredFlights), [filteredFlights])
-  const byFlightType = useMemo(
-    () => sumBy(filteredFlights, (flight) => FLIGHT_TYPE_LABELS[flight.flightType], () => 1),
+  const byFlightType = useMemo(() => computeByFlightType(filteredFlights), [filteredFlights])
+  const countByAgency = useMemo(
+    () => sumBy(filteredFlights, (flight) => flight.agency, () => 1),
     [filteredFlights],
   )
   const spendByAgency = useMemo(
@@ -72,6 +82,12 @@ function App() {
         () => 1,
       ).slice(0, 5),
     [filteredFlights],
+  )
+
+  const referencePrices = useMemo(() => economicReferencePrices(flights), [flights])
+  const savings = useMemo(
+    () => computeSavings(filteredFlights, referencePrices),
+    [filteredFlights, referencePrices],
   )
 
   const show = (formatted: string) => (status === 'ready' ? formatted : '…')
@@ -98,20 +114,18 @@ function App() {
         <KpiCard label="Nombre de vols" value={show(integerFormat.format(kpis.flightCount))} />
         <KpiCard label="Prix moyen" value={show(integerFormat.format(kpis.averagePrice))} />
         <KpiCard
-          label="Distance totale"
-          value={show(compactFormat.format(kpis.totalDistance))}
+          label="Distance moyenne"
+          value={show(integerFormat.format(kpis.averageDistance))}
           unit="km"
         />
 
         <MonthlyTrend data={monthly} />
-        <BarBreakdown title="Répartition par type de vol" data={byFlightType} valueLabel="Vols" />
-        <BarBreakdown title="Dépenses par agence" data={spendByAgency} valueLabel="Dépenses" />
+        <FlightTypeTable data={byFlightType} />
+        <AgencyBreakdown spendByAgency={spendByAgency} countByAgency={countByAgency} />
         <TopRoutes data={topRoutes} />
+        <SavingsCard savings={savings} totalSpend={kpis.totalSpend} />
 
-        <section className="block table">
-          <h2>Détail des vols</h2>
-            <FlightsTable flights={filteredFlights} />
-        </section>
+        <FlightsTable flights={filteredFlights} />
       </div>
     </main>
   )
