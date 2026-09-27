@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { loadFlights } from './data/loadFlights'
 import { computeKpis } from './logic/aggregations'
+import { DEFAULT_FILTERS, filterFlights } from './logic/filters'
+import FiltersBar from './components/FiltersBar'
 import KpiCard from './components/KpiCard'
-import type { Flight } from './types'
+import type { Filters, Flight } from './types'
 import './App.css'
 
 type Status = 'loading' | 'ready' | 'error'
@@ -16,6 +18,7 @@ const compactFormat = new Intl.NumberFormat('fr-BE', {
 function App() {
   const [flights, setFlights] = useState<Flight[]>([])
   const [status, setStatus] = useState<Status>('loading')
+  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
 
   useEffect(() => {
     let cancelled = false
@@ -39,10 +42,22 @@ function App() {
     }
   }, [])
 
-  const kpis = useMemo(() => computeKpis(flights), [flights])
+  const agencies = useMemo(
+    () => [...new Set(flights.map((flight) => flight.agency))].sort(),
+    [flights],
+  )
+
+  const filteredFlights = useMemo(() => {
+    const start = performance.now()
+    const result = filterFlights(flights, filters)
+    console.log(`Filtrage : ${result.length} vols en ${Math.round(performance.now() - start)} ms`)
+    return result
+  }, [flights, filters])
+
+  const kpis = useMemo(() => computeKpis(filteredFlights), [filteredFlights])
 
   const show = (formatted: string) => (status === 'ready' ? formatted : '…')
-  
+
   return (
     <main>
       <div className="dashboard">
@@ -52,9 +67,14 @@ function App() {
           {status === 'error' && <p role="alert">Impossible de charger les données.</p>}
         </header>
 
-        <section className="block filters">
-          <h2>Filtres</h2>
-        </section>
+        <FiltersBar
+          filters={filters}
+          onChange={setFilters}
+          agencies={agencies}
+          minDay="2019-09-26"
+          maxDay="2023-07-24"
+          resultCount={status === 'ready' ? filteredFlights.length : -1}
+        />
 
         <KpiCard label="Dépenses totales" value={show(compactFormat.format(kpis.totalSpend))} />
         <KpiCard label="Nombre de vols" value={show(integerFormat.format(kpis.flightCount))} />

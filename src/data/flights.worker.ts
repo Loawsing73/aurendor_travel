@@ -23,6 +23,7 @@ function toFlight(row: RawFlight): Flight {
     return {
         ...row,
         date: new Date(Number(year), Number(month) - 1, Number(day)),
+        day: `${year}-${month}-${day}`,
         month: '${year}-${month}',
     }
 }

@@ -11,5 +11,13 @@ export interface Flight {
     distance: number
     agency: string
     date: Date
+    day: string
     month: string
+}
+
+export interface Filters {
+  startDay: string
+  endDay: string
+  agency: string
+  flightType: FlightType | 'all'
 }
