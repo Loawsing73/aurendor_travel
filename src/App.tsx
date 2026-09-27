@@ -95,9 +95,12 @@ function App() {
   return (
     <main>
       <div className="dashboard">
-        <header className="block header">
-          <h1>Suivi des déplacements</h1>
-          <p>Période : 26/09/2019 – 24/07/2023</p>
+        <header className="header">
+          <div>
+            <h1>Suivi des déplacements</h1>
+            <p>Vols d’affaires réservés du 26/09/2019 au 24/07/2023</p>
+          </div>
+          <p className="header-meta">Source : Travel Dataset, Datathon 2019</p>
           {status === 'error' && <p role="alert">Impossible de charger les données.</p>}
         </header>
 

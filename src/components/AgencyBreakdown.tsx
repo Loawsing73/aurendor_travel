@@ -3,6 +3,7 @@ import { Bar, BarChart, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } 
 import type { CategoryTotal } from '../logic/aggregations'
 import { compactFormat, integerFormat } from '../format'
 import Toggle from './Toggle'
+import { CHART, TOOLTIP_STYLE } from '../theme'
 
 type Metric = 'spend' | 'count'
 
@@ -26,27 +27,28 @@ function AgencyBreakdown({ spendByAgency, countByAgency }: AgencyBreakdownProps)
         <h2>{METRIC_LABELS[metric]} par agence</h2>
         <Toggle label="Indicateur affiché" options={METRIC_LABELS} value={metric} onChange={setMetric} />
       </div>
-      <ResponsiveContainer width="100%" height={data.length * 48 + 16}>
+            <ResponsiveContainer width="100%" height={data.length * 48 + 16}>
         <BarChart data={data} layout="vertical" margin={{ top: 0, right: 48, bottom: 0, left: 0 }}>
           <XAxis type="number" hide />
           <YAxis
             type="category"
             dataKey="label"
             width={100}
-            tick={{ fill: '#1f2328', fontSize: 13 }}
+            tick={{ fill: CHART.ink, fontSize: 13 }}
             axisLine={false}
             tickLine={false}
           />
           <Tooltip
-            cursor={{ fill: '#f4f5f7' }}
+            {...TOOLTIP_STYLE}
+            cursor={{ fill: CHART.hover }}
             formatter={(value) => [integerFormat.format(Number(value)), METRIC_LABELS[metric]]}
           />
-          <Bar dataKey="value" fill="#2a78d6" radius={[0, 4, 4, 0]} barSize={24} isAnimationActive={false}>
+          <Bar dataKey="value" fill={CHART.accent} radius={0} barSize={24} isAnimationActive={false}>
             <LabelList
               dataKey="value"
               position="right"
               formatter={(value) => compactFormat.format(Number(value))}
-              style={{ fill: '#57606a', fontSize: 12 }}
+              style={{ fill: CHART.muted, fontSize: 12, fontFamily: CHART.mono }}
             />
           </Bar>
         </BarChart>

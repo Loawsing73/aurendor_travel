@@ -10,6 +10,7 @@ import {
 } from 'recharts'
 import type { MonthlyPoint } from '../logic/aggregations'
 import { compactFormat, formatMonth, integerFormat } from '../format'
+import { CHART, TOOLTIP_STYLE } from '../theme'
 
 type Metric = 'spend' | 'count'
 
@@ -43,36 +44,37 @@ function MonthlyTrend({ data }: MonthlyTrendProps) {
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={260}>
-        <LineChart data={data} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
-          <CartesianGrid stroke="#eaeef2" vertical={false} />
-          <XAxis
-            dataKey="month"
-            tickFormatter={formatMonth}
-            minTickGap={40}
-            tick={{ fill: '#57606a', fontSize: 12 }}
-            axisLine={{ stroke: '#d0d7de' }}
-            tickLine={false}
-          />
-          <YAxis
-            tickFormatter={(value: number) => compactFormat.format(value)}
-            tick={{ fill: '#57606a', fontSize: 12 }}
-            axisLine={false}
-            tickLine={false}
-            width={56}
-          />
-          <Tooltip
-            labelFormatter={(label) => formatMonth(String(label))}
-            formatter={(value) => [integerFormat.format(Number(value)), METRIC_LABELS[metric]]}
-          />
-          <Line
-            type="linear"
-            dataKey={metric}
-            stroke="#2a78d6"
-            strokeWidth={2}
-            dot={false}
-            activeDot={{ r: 5 }}
-            isAnimationActive={false}
+        <ResponsiveContainer width="100%" height={260}>
+            <LineChart data={data} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
+            <CartesianGrid stroke={CHART.rule} vertical={false} />
+            <XAxis
+                dataKey="month"
+                tickFormatter={formatMonth}
+                minTickGap={40}
+                tick={{ fill: CHART.muted, fontSize: 12, fontFamily: CHART.mono }}
+                axisLine={{ stroke: CHART.ink }}
+                tickLine={false}
+            />
+            <YAxis
+                tickFormatter={(value: number) => compactFormat.format(value)}
+                tick={{ fill: CHART.muted, fontSize: 12, fontFamily: CHART.mono }}
+                axisLine={false}
+                tickLine={false}
+                width={56}
+            />
+            <Tooltip
+                {...TOOLTIP_STYLE}
+                labelFormatter={(label) => formatMonth(String(label))}
+                formatter={(value) => [integerFormat.format(Number(value)), METRIC_LABELS[metric]]}
+            />
+            <Line
+                type="linear"
+                dataKey={metric}
+                stroke={CHART.accent}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 5 }}
+                isAnimationActive={false}
           />
         </LineChart>
       </ResponsiveContainer>
