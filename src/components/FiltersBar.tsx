@@ -29,7 +29,7 @@ function FiltersBar({ filters, onChange, agencies, minDay, maxDay, resultCount}:
                     />
                 </div>
 
-                <div className="filed">
+                <div className="field">
                     <label htmlFor="end-day">Au</label>
                     <input
                         id="end-day"
