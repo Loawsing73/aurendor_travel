@@ -1,19 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { loadFlights } from './data/loadFlights'
-import { computeKpis } from './logic/aggregations'
+import { computeKpis, computeMonthly, routeKey, sumBy } from './logic/aggregations'
 import { DEFAULT_FILTERS, filterFlights } from './logic/filters'
 import FiltersBar from './components/FiltersBar'
 import KpiCard from './components/KpiCard'
+import MonthlyTrend from './components/MonthlyTrend'
+import BarBreakdown from './components/BarBreakdown'
+import TopRoutes from './components/TopRoutes'
+import { FLIGHT_TYPE_LABELS } from './labels'
+import { cityName, compactFormat, integerFormat } from './format'
 import type { Filters, Flight } from './types'
+import FlightsTable from './components/FlightsTable'
 import './App.css'
 
 type Status = 'loading' | 'ready' | 'error'
-
-const integerFormat = new Intl.NumberFormat('fr-BE', { maximumFractionDigits: 0 })
-const compactFormat = new Intl.NumberFormat('fr-BE', {
-  notation: 'compact',
-  maximumFractionDigits: 1,
-})
 
 function App() {
   const [flights, setFlights] = useState<Flight[]>([])
@@ -55,6 +55,24 @@ function App() {
   }, [flights, filters])
 
   const kpis = useMemo(() => computeKpis(filteredFlights), [filteredFlights])
+  const monthly = useMemo(() => computeMonthly(filteredFlights), [filteredFlights])
+  const byFlightType = useMemo(
+    () => sumBy(filteredFlights, (flight) => FLIGHT_TYPE_LABELS[flight.flightType], () => 1),
+    [filteredFlights],
+  )
+  const spendByAgency = useMemo(
+    () => sumBy(filteredFlights, (flight) => flight.agency, (flight) => flight.price),
+    [filteredFlights],
+  )
+  const topRoutes = useMemo(
+    () =>
+      sumBy(
+        filteredFlights,
+        (flight) => routeKey({ ...flight, from: cityName(flight.from), to: cityName(flight.to) }),
+        () => 1,
+      ).slice(0, 5),
+    [filteredFlights],
+  )
 
   const show = (formatted: string) => (status === 'ready' ? formatted : '…')
 
@@ -85,21 +103,14 @@ function App() {
           unit="km"
         />
 
-        <section className="block trend">
-          <h2>Évolution mensuelle</h2>
-        </section>
-        <section className="block chart">
-          <h2>Répartition par type de vol</h2>
-        </section>
-        <section className="block chart">
-          <h2>Dépenses par agence</h2>
-        </section>
-        <section className="block chart">
-          <h2>Top trajets</h2>
-        </section>
+        <MonthlyTrend data={monthly} />
+        <BarBreakdown title="Répartition par type de vol" data={byFlightType} valueLabel="Vols" />
+        <BarBreakdown title="Dépenses par agence" data={spendByAgency} valueLabel="Dépenses" />
+        <TopRoutes data={topRoutes} />
 
         <section className="block table">
           <h2>Détail des vols</h2>
+            <FlightsTable flights={filteredFlights} />
         </section>
       </div>
     </main>
