@@ -11,7 +11,7 @@ export function filterFlights(flights: Flight[], filters: Filters): Flight[] {
     return flights.filter(
         (flight) =>
         (filters.startDay === '' || flight.day >= filters.startDay) &&
-        (filters.endDay === '' || flight.day >= filters.endDay) &&
+        (filters.endDay === '' || flight.day <= filters.endDay) &&
         (filters.agency === 'all' || flight.agency === filters.agency) &&
         (filters.flightType === 'all' || flight.flightType === filters.flightType),
     )

@@ -4,9 +4,7 @@ import {
   computeByFlightType,
   computeKpis,
   computeMonthly,
-  computeSavings,
-  economicReferencePrices,
-  routeKey,
+  computeRoutes,
   sumBy,
 } from './logic/aggregations'
 import { DEFAULT_FILTERS, filterFlights } from './logic/filters'
@@ -15,10 +13,9 @@ import KpiCard from './components/KpiCard'
 import MonthlyTrend from './components/MonthlyTrend'
 import FlightTypeTable from './components/FlightTypeTable'
 import AgencyBreakdown from './components/AgencyBreakdown'
-import SavingsCard from './components/SavingsCard'
 import TopRoutes from './components/TopRoutes'
 import FlightsTable from './components/FlightsTable'
-import { cityName, compactFormat, integerFormat } from './format'
+import { compactFormat, integerFormat } from './format'
 import type { Filters, Flight } from './types'
 import './App.css'
 
@@ -74,20 +71,22 @@ function App() {
     () => sumBy(filteredFlights, (flight) => flight.agency, (flight) => flight.price),
     [filteredFlights],
   )
-  const topRoutes = useMemo(
+  const routes = useMemo(() => computeRoutes(filteredFlights), [filteredFlights])
+  const mostFrequentRoutes = useMemo(
     () =>
-      sumBy(
-        filteredFlights,
-        (flight) => routeKey({ ...flight, from: cityName(flight.from), to: cityName(flight.to) }),
-        () => 1,
-      ).slice(0, 5),
-    [filteredFlights],
+      [...routes]
+        .sort((a, b) => b.roundTrips - a.roundTrips)
+        .slice(0, 5)
+        .map((route) => ({ label: route.label, value: route.roundTrips })),
+    [routes],
   )
-
-  const referencePrices = useMemo(() => economicReferencePrices(flights), [flights])
-  const savings = useMemo(
-    () => computeSavings(filteredFlights, referencePrices),
-    [filteredFlights, referencePrices],
+  const mostExpensiveRoutes = useMemo(
+    () =>
+      [...routes]
+        .sort((a, b) => b.averagePrice - a.averagePrice)
+        .slice(0, 5)
+        .map((route) => ({ label: route.label, value: route.averagePrice })),
+    [routes],
   )
 
   const show = (formatted: string) => (status === 'ready' ? formatted : '…')
@@ -125,9 +124,16 @@ function App() {
         <MonthlyTrend data={monthly} />
         <FlightTypeTable data={byFlightType} />
         <AgencyBreakdown spendByAgency={spendByAgency} countByAgency={countByAgency} />
-        <TopRoutes data={topRoutes} />
-        <SavingsCard savings={savings} totalSpend={kpis.totalSpend} />
-
+        <TopRoutes
+          title="Trajets les plus fréquents (allers-retours)"
+          items={mostFrequentRoutes}
+          formatValue={(value) => `${integerFormat.format(value)} A/R`}
+        />
+        <TopRoutes
+          title="Trajets les plus chers (prix moyen par vol)"
+          items={mostExpensiveRoutes}
+          formatValue={(value) => integerFormat.format(value)}
+        />
         <FlightsTable flights={filteredFlights} />
       </div>
     </main>

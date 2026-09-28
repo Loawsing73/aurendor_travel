@@ -11,6 +11,7 @@ import {
 import type { MonthlyPoint } from '../logic/aggregations'
 import { compactFormat, formatMonth, integerFormat } from '../format'
 import { CHART, TOOLTIP_STYLE } from '../theme'
+import Toggle from './Toggle'
 
 type Metric = 'spend' | 'count'
 
@@ -29,19 +30,8 @@ function MonthlyTrend({ data }: MonthlyTrendProps) {
   return (
     <section className="block trend">
       <div className="block-head">
-        <h2>Évolution mensuelle — {METRIC_LABELS[metric]}</h2>
-        <div className="toggle" role="group" aria-label="Indicateur affiché">
-          {(Object.keys(METRIC_LABELS) as Metric[]).map((key) => (
-            <button
-              key={key}
-              type="button"
-              aria-pressed={metric === key}
-              onClick={() => setMetric(key)}
-            >
-              {METRIC_LABELS[key]}
-            </button>
-          ))}
-        </div>
+        <h2>Évolution mensuelle - {METRIC_LABELS[metric]}</h2>
+        <Toggle label="Indicateur affiché" options={METRIC_LABELS} value={metric} onChange={setMetric} />
       </div>
 
         <ResponsiveContainer width="100%" height={260}>

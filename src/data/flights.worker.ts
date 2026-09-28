@@ -31,7 +31,7 @@ function toFlight(row: RawFlight): Flight {
 self.onmessage = async (event: MessageEvent<string>) => {
     try {
         const response = await fetch(event.data)
-        if (!response.ok) throw new Error ('HTTP ${response.status}')
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
         const text = await response.text()
 
         const results = Papa.parse<RawFlight>(text, {

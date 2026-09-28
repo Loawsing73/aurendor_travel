@@ -39,9 +39,6 @@ function FlightTypeTable({ data }: FlightTypeTableProps) {
           </tbody>
         </table>
       </div>
-      <p className="block-note">
-        Distances moyennes quasi identiques : l’écart de prix vient de la classe, pas du trajet.
-      </p>
     </section>
   )
 }

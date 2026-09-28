@@ -1,24 +1,28 @@
-import type { CategoryTotal } from '../logic/aggregations'
-import { integerFormat } from '../format'
-
-interface TopRoutesProps {
-  data: CategoryTotal[]
+interface RankingItem {
+  label: string
+  value: number
 }
 
-function TopRoutes({ data }: TopRoutesProps) {
-  const max = data[0]?.value ?? 0
+interface TopRoutesProps {
+  title: string
+  items: RankingItem[]
+  formatValue: (value: number) => string
+}
+
+function TopRoutes({ title, items, formatValue }: TopRoutesProps) {
+  const max = items[0]?.value ?? 0
 
   return (
     <section className="block chart">
-      <h2>Top 5 trajets (aller-retour)</h2>
+      <h2>{title}</h2>
       <ol className="routes">
-        {data.map((route) => (
-          <li key={route.label}>
+        {items.map((item) => (
+          <li key={item.label}>
             <div className="route-line">
-              <span>{route.label}</span>
-              <strong>{integerFormat.format(route.value)} vols</strong>
+              <span>{item.label}</span>
+              <strong>{formatValue(item.value)}</strong>
             </div>
-            <div className="route-bar" style={{ width: `${(route.value / max) * 100}%` }} />
+            <div className="route-bar" style={{ width: `${(item.value / max) * 100}%` }} />
           </li>
         ))}
       </ol>

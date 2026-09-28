@@ -1,4 +1,5 @@
 import type { Flight, FlightType } from '../types'
+import { cityName } from '../format'
 
 export interface Kpis {
     totalSpend: number
@@ -69,9 +70,37 @@ export function sumBy(
     .sort((a, b) => b.value - a.value)
 }
 
-export function routeKey(flight: Flight): string {
-  const [a, b] = [flight.from, flight.to].sort()
+function routeKey(flight: Flight): string {
+  const [a, b] = [cityName(flight.from), cityName(flight.to)].sort()
   return `${a} ↔ ${b}`
+}
+
+export interface RouteStats {
+  label: string
+  roundTrips: number
+  averagePrice: number
+}
+
+export function computeRoutes(flights: Flight[]): RouteStats[] {
+  const byRoute = new Map<string, { travelCodes: Set<number>; total: number; count: number }>()
+
+  for (const flight of flights) {
+    const key = routeKey(flight)
+    let route = byRoute.get(key)
+    if (!route) {
+      route = { travelCodes: new Set(), total: 0, count: 0 }
+      byRoute.set(key, route)
+    }
+    route.travelCodes.add(flight.travelCode)
+    route.total += flight.price
+    route.count += 1
+  }
+
+  return [...byRoute.entries()].map(([label, route]) => ({
+    label,
+    roundTrips: route.travelCodes.size,
+    averagePrice: route.total / route.count,
+  }))
 }
 
 export interface FlightTypeStats {
@@ -105,50 +134,4 @@ export function computeByFlightType(flights: Flight[]): FlightTypeStats[] {
       pricePerKm: sum.price / sum.distance,
     }
   })
-}
-
-function directedRoute(flight: Flight): string {
-  return `${flight.from}→${flight.to}`
-}
-
-export function economicReferencePrices(flights: Flight[]): Map<string, number> {
-  const sums = new Map<string, { total: number; count: number }>()
-
-  for (const flight of flights) {
-    if (flight.flightType !== 'economic') continue
-    const key = directedRoute(flight)
-    const sum = sums.get(key) ?? { total: 0, count: 0 }
-    sum.total += flight.price
-    sum.count += 1
-    sums.set(key, sum)
-  }
-
-  const averages = new Map<string, number>()
-  for (const [key, sum] of sums) {
-    averages.set(key, sum.total / sum.count)
-  }
-  return averages
-}
-
-export interface Savings {
-  firstClassCount: number
-  firstClassSpend: number
-  potentialSavings: number
-}
-
-export function computeSavings(flights: Flight[], referencePrices: Map<string, number>): Savings {
-  let firstClassCount = 0
-  let firstClassSpend = 0
-  let potentialSavings = 0
-
-  for (const flight of flights) {
-    if (flight.flightType !== 'firstClass') continue
-    const economicPrice = referencePrices.get(directedRoute(flight))
-    if (economicPrice === undefined) continue
-    firstClassCount += 1
-    firstClassSpend += flight.price
-    potentialSavings += flight.price - economicPrice
-  }
-
-  return { firstClassCount, firstClassSpend, potentialSavings }
 }

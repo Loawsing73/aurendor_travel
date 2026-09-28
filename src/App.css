@@ -70,12 +70,6 @@
   margin: 0;
 }
 
-.block-note {
-  margin: 16px 0 0;
-  font-size: 0.8125rem;
-  color: var(--color-ink-muted);
-}
-
 .numeric {
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -275,23 +269,6 @@
 .route-bar {
   height: 4px;
   background: var(--color-accent);
-}
-
-/* ---------- Économies ---------- */
-
-.savings-value {
-  margin: 0;
-  font-size: 3rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-accent);
-}
-
-.savings-text {
-  margin: 8px 0 0;
-  max-width: 44ch;
-  line-height: 1.5;
 }
 
 /* ---------- Tableau des vols ---------- */
