@@ -1,32 +1,14 @@
-# React + TypeScript + Vite
+# Suivi des déplacements - dashboard des vols d'affaires
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Dashboard destiné à une équipe de gestion des voyages d'entreprise, pour suivre les dépenses en vols et les tendances de réservation à partir du jeu de données *Travel Dataset - Datathon 2019* (table des vols, 271 888 lignes).
 
-Currently, two official plugins are available:
+![Capture du dashboard](docs/screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Lancer le projet
 
-## React Compiler
+Prérequis : Node.js 20 ou plus récent.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev       # http://localhost:5173
 ```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
