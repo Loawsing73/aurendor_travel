@@ -290,7 +290,7 @@
   display: grid;
   grid-template-columns: 100px repeat(2, minmax(120px, 1fr)) 130px 110px 90px 110px;
   align-items: center;
-  min-width: 780px;
+  min-width: 876px;
   height: 36px;
   padding: 0 12px;
   gap: 12px;
