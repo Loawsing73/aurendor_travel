@@ -93,7 +93,7 @@ Point notable : l'option `worker: true` de PapaParse fonctionnait en développem
 
 ## Choix UX
 
-Les maquettes sont dans [`docs/mockup.png`].
+![Mockup](docs/mockup.png)
 
 - **Hiérarchie** : filtres, puis KPI, puis tendance, puis répartitions, puis détail. Le plus important est visible sans défiler.
 - **Des filtres globaux** : un seul jeu de filtres pour tout le dashboard, pour que tous les chiffres affichés portent toujours sur la même sélection.
