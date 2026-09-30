@@ -1,4 +1,4 @@
-/* ---------- Grille ---------- */
+/* grille */
 
 .dashboard {
   display: grid;
@@ -41,8 +41,7 @@
   }
 }
 
-/* ---------- Sections : un filet noir en haut, pas de carte ---------- */
-
+/*sections*/
 .block {
   min-width: 0;
   border-top: 2px solid var(--color-ink);
@@ -75,8 +74,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- En-tête ---------- */
-
+/*header*/
 .header {
   display: flex;
   flex-wrap: wrap;
@@ -104,8 +102,7 @@
   font-size: 0.75rem;
 }
 
-/* ---------- Filtres ---------- */
-
+/*filters*/
 .filters h2 {
   margin-bottom: 12px;
 }
@@ -160,8 +157,7 @@
   color: var(--color-warning);
 }
 
-/* ---------- KPI ---------- */
-
+/*kpi*/
 .kpi h2 {
   margin-bottom: 10px;
   color: var(--color-ink-muted);
@@ -181,8 +177,7 @@
   color: var(--color-ink-muted);
 }
 
-/* ---------- Bascule : des onglets soulignés ---------- */
-
+/*bascule*/
 .toggle {
   display: inline-flex;
   gap: 16px;
@@ -207,8 +202,7 @@
   border-bottom-color: var(--color-accent);
 }
 
-/* ---------- Tableau comparatif ---------- */
-
+/*tableau*/
 .compare-wrap {
   overflow-x: auto;
 }
@@ -241,8 +235,7 @@
   white-space: nowrap;
 }
 
-/* ---------- Top trajets ---------- */
-
+/*top trajet*/
 .routes {
   list-style: none;
   margin: 0;
@@ -271,8 +264,7 @@
   background: var(--color-accent);
 }
 
-/* ---------- Tableau des vols ---------- */
-
+/*tableau vols*/
 .table-count {
   font-family: var(--font-mono);
   font-size: 0.75rem;

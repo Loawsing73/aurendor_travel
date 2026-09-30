@@ -19,6 +19,7 @@ interface AgencyBreakdownProps {
 
 function AgencyBreakdown({ spendByAgency, countByAgency }: AgencyBreakdownProps) {
   const [metric, setMetric] = useState<Metric>('spend')
+  /*deux séries à afficher*/
   const data = metric === 'spend' ? spendByAgency : countByAgency
 
   return (
@@ -28,6 +29,7 @@ function AgencyBreakdown({ spendByAgency, countByAgency }: AgencyBreakdownProps)
         <Toggle label="Indicateur affiché" options={METRIC_LABELS} value={metric} onChange={setMetric} />
       </div>
             <ResponsiveContainer width="100%" height={data.length * 48 + 16}>
+        {/*barchart reçoit data de app.tsx*/}
         <BarChart data={data} layout="vertical" margin={{ top: 0, right: 48, bottom: 0, left: 0 }}>
           <XAxis type="number" hide />
           <YAxis

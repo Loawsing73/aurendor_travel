@@ -3,8 +3,12 @@ import type { WorkerResponse } from './flights.worker'
 
 const FLIGHTS_URL = new URL('data/flights.csv', document.baseURI).href
 
+//Promise: pending-fulfilled-rejected
+//obj = résultat pas encore disponible
+//valeur obtenue quand promesse résolue sera tableau Flight
 export function loadFlights(): Promise<Flight[]> {
     return new Promise((resolve, reject) => {
+//création worker
         const worker = new Worker(new URL ('./flights.worker.ts', import.meta.url), {
             type: 'module',
         })

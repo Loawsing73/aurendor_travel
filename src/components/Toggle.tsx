@@ -5,6 +5,7 @@ interface ToggleProps<T extends string> {
   onChange: (value: T) => void
 }
 
+/*clic = onChange(key)*/
 function Toggle<T extends string>({ label, options, value, onChange }: ToggleProps<T>) {
   return (
     <div className="toggle" role="group" aria-label={label}>

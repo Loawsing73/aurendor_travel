@@ -1,6 +1,7 @@
 import Papa from 'papaparse'
 import type { Flight, FlightType } from '../types.ts'
 
+//interface = forme objet en ts
 interface RawFlight {
     travelCode: number
     userCode: number
@@ -14,10 +15,12 @@ interface RawFlight {
     date: string
 }
 
+//type = union |
 export type WorkerResponse =
     | { ok: true; flights: Flight[] }
     | { ok: false; message: string }
 
+//split date de  csv + réécriture format date
 function toFlight(row: RawFlight): Flight {
     const [month, day, year] = row.date.split('/')
     return {
@@ -28,6 +31,11 @@ function toFlight(row: RawFlight): Flight {
     }
 }
 
+//fetch csv + gestion erreur
+//lit contenu
+//parsing: colonne, str to nnumber
+//lignes stockées dans results.data
+//applique toFlight à chaque ligne => Flight[]
 self.onmessage = async (event: MessageEvent<string>) => {
     try {
         const response = await fetch(event.data)

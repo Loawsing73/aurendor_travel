@@ -8,7 +8,7 @@ interface TopRoutesProps {
   items: RankingItem[]
   formatValue: (value: number) => string
 }
-
+/*pas graph => div dont largeur calculée en %*/
 function TopRoutes({ title, items, formatValue }: TopRoutesProps) {
   const max = items[0]?.value ?? 0
 

@@ -21,11 +21,13 @@ import './App.css'
 
 type Status = 'loading' | 'ready' | 'error'
 
+//useState - garde état valeur ∩ change
 function App() {
   const [flights, setFlights] = useState<Flight[]>([])
   const [status, setStatus] = useState<Status>('loading')
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
 
+//useEffect - pareil mais en dehors d'affichage
   useEffect(() => {
     let cancelled = false
     const start = performance.now()
@@ -47,7 +49,10 @@ function App() {
       cancelled = true
     }
   }, [])
-
+//useMemo - résultat de calcul et refait si données d'entrée changées
+//extrait agence de chaque vol=>répétitions
+//new set = ensemble => doublons disparaissent
+//... => set en tableau puis sort
   const agencies = useMemo(
     () => [...new Set(flights.map((flight) => flight.agency))].sort(),
     [flights],

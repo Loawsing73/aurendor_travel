@@ -50,6 +50,10 @@ function FlightsTable({ flights }: FlightsTableProps) {
 
   const scrollRef = useRef<HTMLDivElement>(null)
 
+  //count = total de lignes
+  //getScrollElement = zone qui défile
+  //estimate Size = hauteur de ligne
+  //overscan = lignes supp, cas de défilement rapide
   const virtualizer = useVirtualizer({
     count: sortedFlights.length,
     getScrollElement: () => scrollRef.current,
