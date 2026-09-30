@@ -83,8 +83,8 @@ Mesures faites avec `performance.now()` (visibles dans la console) :
 
 | Opération | Durée |
 |---|---|
-| Téléchargement + parsing + nettoyage de 271 888 lignes | environ 2 à 3 s, hors du thread principal |
-| Filtrage | 6 à 25 ms |
+| Téléchargement + parsing + nettoyage de 271 888 lignes | environ 1 à 3 s, hors du thread principal |
+| Filtrage | 3 à 25 ms |
 | Tri du tableau complet | 110 à 240 ms (27 ms sur une sélection de 38 758 vols) |
 | Lignes du tableau présentes dans le DOM | environ 30 |
 
