@@ -55,7 +55,7 @@ src/
 │   └── loadFlights.ts       # expose le worker sous forme de Promise
 ├── logic/
 │   ├── filters.ts           # filtrage (fonctions pures)
-│   └── aggregations.ts      # KPI, séries mensuelles, regroupements (fonctions pures)
+│   └── aggregations.tsx      # KPI, séries mensuelles, regroupements (fonctions pures)
 ├── components/              # FiltersBar, KpiCard, MonthlyTrend, FlightTypeTable,
 │                            # AgencyBreakdown, TopRoutes, FlightsTable, Toggle
 ├── types.ts                 # types Flight, Filters
@@ -133,5 +133,6 @@ J'ai utilisé Claude comme assistant pendant le développement :
 
 - **Comprendre les librairies** : prise en main de TanStack Virtual, Recharts et PapaParse.
 - **Écrire du code** : une partie du code a été générée avec Claude, puis relue et adaptée au projet.
+- **Rédiger le README** : structure et reformulation du README.
 
 Les choix d'architecture, d'interface et d'interprétation des données décrits dans ce README sont les miens.
